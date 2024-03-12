@@ -10,7 +10,7 @@ const PostSchema = mongoose.Schema({
   },
   author: {
     type: mongoose.Types.ObjectId,
-    ref: "user",
+    ref: "User",
   },
   createdAt: {
     type: Date,
@@ -18,5 +18,5 @@ const PostSchema = mongoose.Schema({
   },
 });
 
-const Post = mongoose.model("post", PostSchema);
+const Post = mongoose.model("Post", PostSchema);
 export default Post;

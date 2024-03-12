@@ -1,52 +1,51 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const UserSchema = mongoose.Schema(
-  {
-    username: {
-      type: String,
-      unique: true,
-    },
-    user_role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
-    },
-    first_name: {
-      type: String,
-      required: true,
-    },
-    last_name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: [true, "Please provide an email"],
-      unique: true,
-      match: [
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        "Please provide a valid email",
-      ],
-    },
-    password: {
-      type: String,
-      required: [true, "Please enter a password"],
-      minlength: [6, "Password must be at least 6 characters long"],
-      select: false,
-    },
-    posts: [{ type: mongoose.Types.ObjectId, ref: "post" }],
+const UserSchema = mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
   },
-  {
-    timestamps: true,
-  }
-);
+  user_role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
+  first_name: {
+    type: String,
+    required: true,
+  },
+  last_name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: [true, "Please provide an email"],
+    unique: true,
+    match: [
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Please provide a valid email",
+    ],
+  },
+  password: {
+    type: String,
+    required: [true, "Please enter a password"],
+    minlength: [6, "Password must be at least 6 characters long"],
+    select: false,
+  },
+  posts: [{ type: mongoose.Types.ObjectId, ref: "Post" }],
+  createdAt: {
+    type: Date,
+    default: () => Date.now(), // Use a function to set the default value dynamically
+  },
+});
 
 UserSchema.set("toJSON", {
   transform: function (doc, ret) {
-    delete ret.password; // Exclude the password field from the JSON output
+    delete ret.password;
     delete ret.createdAt;
-    delete ret.updatedAt;
+    delete ret.updatedAt; // Add this line
     delete ret.__v;
   },
 });
@@ -74,5 +73,5 @@ UserSchema.methods.validateEmail = async function () {
   return emailRegex.test(this.email); // Test the email address against the regular expression
 };
 
-const User = mongoose.model("user", UserSchema);
+const User = mongoose.model("User", UserSchema);
 export default User;

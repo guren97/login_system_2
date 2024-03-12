@@ -1,4 +1,5 @@
 import asyncHandler from "express-async-handler";
+import mongoose from "mongoose";
 import User from "../models/userSchema.js";
 
 const register = asyncHandler(async (req, res, next) => {
@@ -54,4 +55,30 @@ const getUsers = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { register, getUsers };
+const getUserById = asyncHandler(async (req, res, next) => {
+  const userId = req.params.id;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(401).json({ success: false, message: "Invalid user id" });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not Found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Cannot retrieve users from database",
+      error: error.message,
+    });
+  }
+});
+export { register, getUsers, getUserById };
