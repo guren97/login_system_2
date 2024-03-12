@@ -1,7 +1,9 @@
-const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+import {} from "react";
 
-export default Home
+const Home = () => {
+  const getUsersApi = "http://localhost:5000/api/auth/getUsers";
+
+  return <div>Home</div>;
+};
+
+export default Home;

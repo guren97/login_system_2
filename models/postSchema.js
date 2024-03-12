@@ -5,7 +5,7 @@ const PostSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  contents: {
+  content: {
     type: String,
   },
   author: {
@@ -14,7 +14,7 @@ const PostSchema = mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: () => Date.now(), // Use a function to set the default value dynamically
   },
 });
 
