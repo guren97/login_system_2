@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import router from "./routes/auth.js";
 import connnectDb from "./config/dbconfig.js";
+import errorHandler from "./middleware/error.js";
 
 // import errorHandler from "./middleware/errorMiddleware.js";
 
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use("/api/auth", router);
 
 /* Put error middleware below this comment*/
-// app.use(errorHandler());
+app.use(errorHandler);
 
 /* Start Local Server and Database Connection */
 const startServer = async () => {
