@@ -33,12 +33,16 @@ const register = asyncHandler(async (req, res, next) => {
       password,
     });
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
+    //NOT WORKING
+    // const userEmail = req.body.email;
+    // const isValidEmail = await user.matchEmail(userEmail);
+    // if (!isValidEmail) {
+    //   return next(new ErrorResponse("Provide a valid email", 400));
+    // }
+
+    sendToken(user, 201, res);
   } catch (error) {
-    next(new ErrorResponse("Server Error", 500));
+    return next(new ErrorResponse("Server Error", 500));
   }
 });
 {
@@ -113,11 +117,12 @@ const login = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse("Wrong password", 401));
     }
 
+    sendToken(user, 201, res);
     // Send a success response with a welcome message
-    res.status(200).json({
-      success: true,
-      message: `Logged in as ${user.user_role}, Welcome ${user.first_name}`,
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   message: `Logged in as ${user.user_role}, Welcome ${user.first_name}`,
+    // });
   } catch (error) {
     next(new ErrorResponse("Server Error", 500));
   }
@@ -160,4 +165,19 @@ const updateUser = asyncHandler(async (req, res, next) => {
   }
 });
 
+{
+  /*
+  #####################################################################################
+                                       UPDATE USER
+  #####################################################################################
+  */
+}
+
+const sendToken = async (user, statusCode, res) => {
+  const token = user.getSignedToken();
+  res.status(statusCode).json({
+    success: true,
+    token,
+  });
+};
 export { register, getUsers, getUserById, updateUser, login };
